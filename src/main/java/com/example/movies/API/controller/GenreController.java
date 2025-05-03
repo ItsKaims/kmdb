@@ -51,4 +51,5 @@ public class GenreController {
   ) {
     genreService.delete(id, force);
   }
+
 }

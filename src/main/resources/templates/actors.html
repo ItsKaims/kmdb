@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{mainlayout :: head}"></head>
+  <body>
+    <div th:replace="~{mainlayout :: nav}"></div>
+
+    <div>
+      <h1>All Actors</h1>
+      <ul>
+        <li th:each="m : ${actors}" th:text="${m.name}">Actor Name</li>
+      </ul>
+    </div>
+    <div th:replace="~{mainlayout :: footer}"> </div>
+  </body>
+</html>

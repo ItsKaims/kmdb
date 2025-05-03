@@ -10,6 +10,7 @@ import java.util.List;
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 
   List<Movie> findByReleaseYear(int year);
+  List<Movie> findTop3ByOrderByIdDesc();
 
   @Query("SELECT m FROM Movie m JOIN m.genres g WHERE g.id = :genreId")
   List<Movie> findByGenreId(@Param("genreId") Long genreId);

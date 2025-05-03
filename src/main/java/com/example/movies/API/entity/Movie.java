@@ -3,6 +3,8 @@ package com.example.movies.API.entity;
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 @Entity
 @Table(name = "movies")
@@ -26,6 +28,7 @@ public class Movie {
     joinColumns = @JoinColumn(name = "movie_id"),
     inverseJoinColumns = @JoinColumn(name = "genre_id")
   )
+  @JsonIgnoreProperties("movies")
   private Set<Genre> genres = new HashSet<>();
 
   @ManyToMany
@@ -34,6 +37,7 @@ public class Movie {
     joinColumns = @JoinColumn(name = "movie_id"),
     inverseJoinColumns = @JoinColumn(name = "actor_id")
   )
+  @JsonIgnoreProperties("movies") 
   private Set<Actor> actors = new HashSet<>();
 
   protected Movie() { /* JPA */ }

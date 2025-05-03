@@ -103,4 +103,12 @@ public class MovieService {
     m.getActors().forEach(a -> a.getMovies().remove(m));
     movieRepo.delete(m);
   }
+
+  public List<Movie> getLatestThree() {
+    // Option A: custom query method on repo
+    return movieRepo.findTop3ByOrderByIdDesc();
+    // — or Option B: use Pageable
+    // Pageable topTen = PageRequest.of(0,10, Sort.by("id").descending());
+    // return actorRepo.findAll(topTen).getContent();
+  }
 }

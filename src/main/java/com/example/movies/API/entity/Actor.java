@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 @Entity
 @Table(name = "actors")
@@ -19,6 +21,7 @@ public class Actor {
   private LocalDate birthDate;
 
   @ManyToMany(mappedBy = "actors")
+  @JsonIgnoreProperties("actors")
   private Set<Movie> movies = new HashSet<>();
 
   protected Actor() { /* JPA */ }
