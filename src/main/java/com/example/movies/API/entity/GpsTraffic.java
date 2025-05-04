@@ -7,6 +7,10 @@ import java.time.LocalDateTime;
 @Table(name = "gps_traffic")
 public class GpsTraffic {
   
+
+    //Lat:N23.117475,Lon:E114.418433,Course:0.00,Speed:0.5204,DateTime:11-05-02 21:05:43
+    //Lat:N20.117475,Lon:E100.418433,Course:0.00,Speed:0.5204,DateTime:11-05-02 21:05:43
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
