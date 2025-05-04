@@ -33,5 +33,5 @@ build/
 .vscode/
 
 ### Documentation ###
-.Documentation.docxmovies.db
+Documentation.docx
 movies.db
