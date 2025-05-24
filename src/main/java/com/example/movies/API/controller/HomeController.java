@@ -3,8 +3,9 @@ package com.example.movies.API;
 import com.example.movies.API.service.MovieService;
 import com.example.movies.API.service.GenreService;
 import com.example.movies.API.service.ActorService;
-import com.example.movies.API.service.TrafficService;
-import com.example.movies.API.traffic.Traffic;
+import com.example.movies.API.dto.MovieDTO;
+import com.example.movies.API.dto.ActorDTO;
+import com.example.movies.API.entity.Actor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 
 @Controller
@@ -24,19 +26,15 @@ public class HomeController {
     private final GenreService genreService;
     private final MovieService movieService;
     private final ActorService actorService;
-    private final TrafficService trafficService;
 
-    // ① Inject the MovieService bean
     public HomeController(
         MovieService movieService, 
         GenreService genreService, 
-        ActorService actorService,
-        TrafficService trafficService
+        ActorService actorService
         ) {
         this.movieService = movieService;
         this.genreService = genreService;
         this.actorService = actorService;
-        this.trafficService = trafficService;
     }
 
     @GetMapping("/")
@@ -48,23 +46,21 @@ public class HomeController {
         model.addAttribute("lastTen", actorService.getLatestTen());
         model.addAttribute("latestThree", genreService.getLatestThree());
         model.addAttribute("latestThreeMovies", movieService.getLatestThree());
-        return "index";    // renders index.html
+        return "index";    
     }
 
     @GetMapping("/movies")
     public String movies(Model model) {
         model.addAttribute("pageTitle", "Movies");
-        // ② Actually fetch and hand off the list of movies
         model.addAttribute("movies", movieService.getAll());
-        return "movies";   // renders movies.html
+        return "movies";   
     }
 
     @GetMapping("/genres")
     public String genres(Model model) {
         model.addAttribute("pageTitle", "Genres");
-        // ② Actually fetch and hand off the list of genres
         model.addAttribute("genres", genreService.getAll());
-        return "genres";   // renders movies.html
+        return "genres";  
     }
 
     @GetMapping("/actors")
@@ -74,24 +70,47 @@ public class HomeController {
         return "actors";
     }
 
-    @GetMapping("/traffic")
-    public String traffic(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size,
-        Model model
-    ) {
-    // Sort by date desc, then time desc:
-    Sort sort = Sort.by("date").descending()
-    .and(Sort.by("time").descending());
-    Pageable pageable = PageRequest.of(page, size, sort);
+    @GetMapping("/add-movie")
+    public String addMovie(Model model) {
+        model.addAttribute("pageTitle", "Add Movie");
+        model.addAttribute("actors", actorService.getAll());
+        model.addAttribute("genres", genreService.getAll());
+        model.addAttribute("movie", new MovieDTO());
 
-    Page<Traffic> trafficPage = trafficService.getPage(pageable);
-
-        model.addAttribute("pageTitle", "Traffic");
-        model.addAttribute("trafficPage", trafficPage);
-        return "traffic";
+        return "add-movie";  
     }
-    
+
+    @PostMapping("/add-movie")
+    public String processAddMovie(@ModelAttribute("movie") MovieDTO movieDTO) {
+        movieService.create(
+            movieDTO.getTitle(), 
+            movieDTO.getReleaseYear(), 
+            movieDTO.getDuration(),
+            movieDTO.getGenres(),
+            movieDTO.getActors()
+        ); 
+        return "redirect:/success"; 
+    }
+
+    @GetMapping("/success")
+    public String successPage(Model model) {
+        model.addAttribute("pageTitle", "Success");
+        return "success"; 
+    }
+
+    @GetMapping("/addactor")
+    public String showAddActorForm(Model model) {
+        model.addAttribute("actor", new ActorDTO());
+        return "addactor";
+    }
+
+    @PostMapping("/addactor")
+    public String addActor(@ModelAttribute("actor") ActorDTO actorDTO) {
+        Actor actor = new Actor(actorDTO.getName(), actorDTO.getBirthDate());
+        actorService.create(actor);
+        return "redirect:/success";
+    }
+
 
     // You can add similar methods for /actors, /genres, /traffic:
     // @GetMapping("/actors")   → model.addAttribute("actors", actorService.getAll());

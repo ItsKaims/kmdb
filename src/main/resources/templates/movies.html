@@ -4,7 +4,7 @@
   <body>
     <div th:replace="~{mainlayout :: nav}"></div>
 
-    <div>
+    <div class="container-sm">
       <h1>All Movies</h1>
       <ul>
         <li th:each="m : ${movies}" th:text="${m.title}">Movie Title</li>

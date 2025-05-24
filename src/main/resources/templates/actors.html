@@ -4,10 +4,10 @@
   <body>
     <div th:replace="~{mainlayout :: nav}"></div>
 
-    <div>
-      <h1>All Actors</h1>
-      <ul>
-        <li th:each="m : ${actors}" th:text="${m.name}">Actor Name</li>
+    <div class="container-sm">
+      <ul class="list-group">
+        <li class="list-group-item list-group-item-warning">Actor Name</li>
+        <li class="list-group-item list-group-item-success" th:each="m : ${actors}" th:text="${m.name}">Actor Name</li>
       </ul>
     </div>
     <div th:replace="~{mainlayout :: footer}"> </div>

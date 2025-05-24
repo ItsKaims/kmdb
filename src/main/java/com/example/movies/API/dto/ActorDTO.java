@@ -1,0 +1,39 @@
+package com.example.movies.API.dto;
+
+import java.time.LocalDate;
+import java.util.Set;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import org.springframework.format.annotation.DateTimeFormat;
+
+
+
+
+public class ActorDTO {
+    @NotBlank(message = "Name cannot be blank")
+    @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
+    private String name;
+    @NotNull(message = "Birth date cannot be null")
+    private LocalDate birthDate;
+
+    // Constructors (no-args and all-args if needed)
+    public ActorDTO() {}
+
+    // Getters and setters
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }    
+}

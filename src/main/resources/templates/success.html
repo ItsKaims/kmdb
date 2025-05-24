@@ -4,11 +4,8 @@
   <body>
     <div th:replace="~{mainlayout :: nav}"></div>
 
-    <div class="container-sm">
-      <h1>All Genres</h1>
-      <ul>
-        <li th:each="m : ${genres}" th:text="${m.name}">Movie Title</li>
-      </ul>
+    <div>
+      <h1 style = color:green;>Success, movie added to database</h1>
     </div>
     <div th:replace="~{mainlayout :: footer}"> </div>
   </body>

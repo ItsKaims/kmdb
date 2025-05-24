@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{mainlayout :: head}"></head>
+  <body>
+    <div th:replace="~{mainlayout :: nav}"></div>
+    <div class="container-sm">
+    <div>
+      <h2 style="color: blue;">Add Actor to database</h2></div><br>
+      <form style = color:blue;  th:action="@{/addactor}" method="post" th:object="${actor}">
+         <label for="name">Name:</label>
+        <input type="text" id="name" th:field="*{name}" />
+
+        <label for="birthDate">Birth Date:</label>
+        <input type="date" id="birthDate" th:field="*{birthDate}" />
+
+        <button type="submit">Add Actor</button>
+      </form>
+    </div>
+    </div>
+    <div th:replace="~{mainlayout :: footer}"> </div>
+  </body>
+</html>
