@@ -5,7 +5,6 @@ import com.example.movies.API.service.GenreService;
 import com.example.movies.API.service.ActorService;
 import com.example.movies.API.dto.MovieDTO;
 import com.example.movies.API.dto.ActorDTO;
-import com.example.movies.API.entity.Actor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -97,20 +96,6 @@ public class HomeController {
         model.addAttribute("pageTitle", "Success");
         return "success"; 
     }
-
-    @GetMapping("/addactor")
-    public String showAddActorForm(Model model) {
-        model.addAttribute("actor", new ActorDTO());
-        return "addactor";
-    }
-
-    @PostMapping("/addactor")
-    public String addActor(@ModelAttribute("actor") ActorDTO actorDTO) {
-        Actor actor = new Actor(actorDTO.getName(), actorDTO.getBirthDate());
-        actorService.create(actor);
-        return "redirect:/success";
-    }
-
 
     // You can add similar methods for /actors, /genres, /traffic:
     // @GetMapping("/actors")   → model.addAttribute("actors", actorService.getAll());

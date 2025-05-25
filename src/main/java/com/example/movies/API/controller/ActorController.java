@@ -4,6 +4,9 @@ import com.example.movies.API.entity.Actor;
 import com.example.movies.API.service.ActorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -56,4 +59,5 @@ public class ActorController {
   ) {
     actorService.delete(id, force);
   }
+
 }
