@@ -69,28 +69,6 @@ public class HomeController {
         return "actors";
     }
 
-    @GetMapping("/add-movie")
-    public String addMovie(Model model) {
-        model.addAttribute("pageTitle", "Add Movie");
-        model.addAttribute("actors", actorService.getAll());
-        model.addAttribute("genres", genreService.getAll());
-        model.addAttribute("movie", new MovieDTO());
-
-        return "add-movie";  
-    }
-
-    @PostMapping("/add-movie")
-    public String processAddMovie(@ModelAttribute("movie") MovieDTO movieDTO) {
-        movieService.create(
-            movieDTO.getTitle(), 
-            movieDTO.getReleaseYear(), 
-            movieDTO.getDuration(),
-            movieDTO.getGenres(),
-            movieDTO.getActors()
-        ); 
-        return "redirect:/success"; 
-    }
-
     @GetMapping("/success")
     public String successPage(Model model) {
         model.addAttribute("pageTitle", "Success");
