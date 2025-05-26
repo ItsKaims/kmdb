@@ -20,7 +20,7 @@ public class ActorViewController {
         this.actorService = actorService;
     }
 
-    @GetMapping("addactor")
+    @GetMapping("/addactor")
     public String showAddActorForm(Model model) {
         model.addAttribute("actor", new ActorDTO());
         return "addactor";

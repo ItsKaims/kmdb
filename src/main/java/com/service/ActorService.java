@@ -58,7 +58,7 @@ public class ActorService {
 
   public List<Actor> getLatestTen() {
     // Option A: custom query method on repo
-    return actorRepo.findTop3ByOrderByIdDesc();
+    return actorRepo.findTop10ByOrderByIdDesc();
     // — or Option B: use Pageable
     // Pageable topTen = PageRequest.of(0,10, Sort.by("id").descending());
     // return actorRepo.findAll(topTen).getContent();

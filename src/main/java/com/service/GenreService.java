@@ -69,7 +69,7 @@ public class GenreService {
 
   public List<Genre> getLatestThree() {
     // Option A: custom query method on repo
-    return genreRepo.findTop3ByOrderByIdDesc();
+    return genreRepo.findTop10ByOrderByIdDesc();
     // — or Option B: use Pageable
     // Pageable topTen = PageRequest.of(0,10, Sort.by("id").descending());
     // return actorRepo.findAll(topTen).getContent();

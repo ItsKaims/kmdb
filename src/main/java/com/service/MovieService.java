@@ -106,7 +106,7 @@ public class MovieService {
 
   public List<Movie> getLatestThree() {
     // Option A: custom query method on repo
-    return movieRepo.findTop3ByOrderByIdDesc();
+    return movieRepo.findTop10ByOrderByIdDesc();
     // — or Option B: use Pageable
     // Pageable topTen = PageRequest.of(0,10, Sort.by("id").descending());
     // return actorRepo.findAll(topTen).getContent();

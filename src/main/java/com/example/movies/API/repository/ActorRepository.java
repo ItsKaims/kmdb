@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ActorRepository extends JpaRepository<Actor, Long> {
   List<Actor> findByNameContainingIgnoreCase(String name);
-  List<Actor> findTop3ByOrderByIdDesc();
+  List<Actor> findTop10ByOrderByIdDesc();
 }

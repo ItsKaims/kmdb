@@ -74,9 +74,4 @@ public class HomeController {
         model.addAttribute("pageTitle", "Success");
         return "success"; 
     }
-
-    // You can add similar methods for /actors, /genres, /traffic:
-    // @GetMapping("/actors")   → model.addAttribute("actors", actorService.getAll());
-    // @GetMapping("/genres")   → model.addAttribute("genres", genreService.getAll());
-    // @GetMapping("/traffic")  → model.addAttribute("trafficList", trafficService.getAll());
 }
