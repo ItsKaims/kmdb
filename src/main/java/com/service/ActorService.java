@@ -5,6 +5,9 @@ import com.example.movies.API.exception.ResourceNotFoundException;
 import com.example.movies.API.repository.ActorRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.orm.jpa.JpaSystemException;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,7 +22,7 @@ public class ActorService {
   }
 
   public Actor create(Actor actor) {
-    return actorRepo.save(actor);
+      return actorRepo.saveAndFlush(actor);
   }
 
   public List<Actor> getAll() {

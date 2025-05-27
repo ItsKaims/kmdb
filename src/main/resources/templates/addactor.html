@@ -1,22 +1,71 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="~{mainlayout :: head}"></head>
+  <head th:replace="~{mainlayout :: head}">
+  </head>
   <body>
     <div th:replace="~{mainlayout :: nav}"></div>
-    <div class="container-sm">
-    <div>
-      <h2 style="color: blue;">Add Actor to database</h2></div><br>
-      <form style = color:blue;  th:action="@{/addactor}" method="post" th:object="${actor}">
-         <label for="name">Name:</label>
-        <input type="text" id="name" th:field="*{name}" />
 
-        <label for="birthDate">Birth Date:</label>
-        <input type="date" id="birthDate" th:field="*{birthDate}" />
+    <div class="container my-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+              <h4 class="mb-0">Add Actor</h4>
+            </div>
+            <div class="card-body">
+              <form th:action="@{/addactor}" th:object="${actor}" method="post">
 
-        <button type="submit">Add Actor</button>
-      </form>
+                <!-- Name -->
+                <div class="form-floating mb-3">
+                  <input type="text"
+                         th:field="*{name}"
+                         id="actorName"
+                         placeholder="Actor Name"
+                         class="form-control"
+                         th:classappend="${#fields.hasErrors('name')} ? ' is-invalid' : ''"/>
+                  <label for="actorName">Name</label>
+                  <div class="invalid-feedback" th:errors="*{name}"></div>
+                </div>
+
+                <!-- Birth Date -->
+                <div class="form-floating mb-3">
+                  <input type="date"
+                         th:field="*{birthDate}"
+                         id="birthDate"
+                         placeholder="Birth Date"
+                         class="form-control"
+                         th:classappend="${#fields.hasErrors('birthDate')} ? ' is-invalid' : ''"/>
+                  <label for="birthDate">Birth Date</label>
+                  <div class="invalid-feedback" th:errors="*{birthDate}"></div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                  <button type="submit" class="btn btn-success btn-lg">
+                    <i class="bi bi-person-plus me-2"></i> Add Actor
+                  </button>
+                </div>
+
+                <!-- Success message -->
+                <div th:if="${successMessage}"
+                     class="alert alert-success mt-4"
+                     role="alert">
+                  <i class="bi bi-check-circle-fill me-2"></i>
+                  <span th:text="${successMessage}"></span>
+                </div>
+
+                <!-- General error message -->
+                <div th:if="${errorMessage}"
+                     class="alert alert-danger mt-3"
+                     th:text="${errorMessage}">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    </div>
-    <div th:replace="~{mainlayout :: footer}"> </div>
+
+    <div th:replace="~{mainlayout :: footer}"></div>
   </body>
 </html>

@@ -5,12 +5,25 @@ import java.util.Set;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.PastOrPresent;
 
 public class MovieDTO {
+    @NotBlank(message = "Movie name cannot be empty")
+    @Size(min = 2, max=100, message= "Movie name has to be between 2 and 100 characters long")
     private String title;
+    @NotNull(message = "Release date can not be blank")
+    @Min(value = 1, message = "Release Year has to be number")
     private int releaseYear;
+    @NotNull(message = "duration date can not be blank")
+    @Min(value = 1, message = "Duration must be at least 1 minute")
     private int duration;
+    @NotNull(message ="Please select at least one genre")
+    @Size(min = 1, message = "Select at least one genre from list")
     private Set<Long> genres;
+    @NotNull(message = "Please select at least one actor")
+    @Size(min = 1, message = "Select at least one actor from list")
     private Set<Long> actors;
 
 

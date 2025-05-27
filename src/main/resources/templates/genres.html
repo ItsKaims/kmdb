@@ -1,15 +1,42 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="~{mainlayout :: head}"></head>
+  <head th:replace="~{mainlayout :: head}">
+  </head>
   <body>
     <div th:replace="~{mainlayout :: nav}"></div>
 
-    <div class="container-sm">
-      <h1>All Genres</h1>
-      <ul>
-        <li th:each="m : ${genres}" th:text="${m.name}">Movie Title</li>
-      </ul>
+    <div class="container my-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+              <h4 class="mb-0">
+                <i class="bi bi-tags-fill me-2"></i>All Genres
+              </h4>
+            </div>
+            <div class="card-body p-0">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center"
+                    th:each="genre : ${genres}"
+                    th:text="${genre.name}">
+                  Genre Name
+                </li>
+              </ul>
+              <div th:if="${#lists.isEmpty(genres)}"
+                   class="text-center text-muted py-4">
+                No genres found.
+              </div>
+            </div>
+            <div class="card-footer text-end">
+              <a th:href="@{/addgenre}" class="btn btn-success">
+                <i class="bi bi-plus-circle me-1"></i> Add New Genre
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div th:replace="~{mainlayout :: footer}"> </div>
+
+    <div th:replace="~{mainlayout :: footer}"></div>
   </body>
 </html>

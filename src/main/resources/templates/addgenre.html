@@ -1,31 +1,59 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="~{mainlayout :: head}"></head>
+  <head th:replace="~{mainlayout :: head}">
+  </head>
   <body>
     <div th:replace="~{mainlayout :: nav}"></div>
-    <div class="container-sm">
-    <div>
-      <h2 style="color: blue;">Add genre to database</h2>
-    </div><br>
-      <form style = "color:blue;"  th:action="@{/addgenre}" method="post" th:object="${genre}">
-         <label for="genre">Genre:</label>
-        <input type="text" id="name" th:field="*{genreName}" />
-        
-        <div class="text-danger" th:if="${#fields.hasErrors('genreName')}"
-         th:errors="*{genreName}">Error</div>
-        <button type="submit">Add Genre</button>
-      </form>
+
+    <div class="container my-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+              <h4 class="mb-0">Add Genre</h4>
+            </div>
+            <div class="card-body">
+              <form th:action="@{/addgenre}"
+                    th:object="${genre}"
+                    method="post">
+
+                <div class="form-floating mb-3">
+                  <input type="text"
+                         th:field="*{genreName}"
+                         class="form-control"
+                         th:classappend="${#fields.hasErrors('genreName')}? ' is-invalid' : ''"
+                         id="genreName"
+                         placeholder="Genre name">
+                  <label for="genreName">Genre</label>
+                  <div class="invalid-feedback" th:errors="*{genreName}"></div>
+                </div>
+
+                <div class="d-grid">
+                  <button type="submit" class="btn btn-success btn-lg">
+                    <i class="bi bi-plus-circle me-2"></i> Add Genre
+                  </button>
+                </div>
+
+                <!-- Success message -->
+                <div th:if="${successMessage}"
+                     class="alert alert-success mt-4"
+                     role="alert">
+                  <i class="bi bi-check-circle-fill me-2"></i>
+                  <span th:text="${successMessage}"></span>
+                </div>
+
+                <!-- General error message -->
+                <div th:if="${errorMessage}"
+                     class="alert alert-danger mt-3"
+                     th:text="${errorMessage}">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- display the alert only if successMessage is present -->
-    <div th:if="${successMessage}" class="alert alert-success mt-3" role="alert">
-      <span th:text="${successMessage}"></span>
-    </div>
-    <!-- Error alert -->
-  <div
-    th:if="${errorMessage}"
-    class="alert alert-danger"
-    th:text="${errorMessage}">
-  </div>
-    <div th:replace="~{mainlayout :: footer}"> </div>
+
+    <div th:replace="~{mainlayout :: footer}"></div>
   </body>
 </html>

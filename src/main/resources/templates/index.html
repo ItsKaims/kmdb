@@ -1,72 +1,121 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <!-- 1) Pull in the head fragment -->
-  <head th:replace="~{mainlayout :: head}"></head>
-
+  <head th:replace="~{mainlayout :: head}">
+  </head>
   <body>
-    <!-- 2) Pull in the nav fragment -->
     <div th:replace="~{mainlayout :: nav}"></div>
 
-    <div class="container mt-4">
-      <div class="row">
-      
-        <!-- Actors column -->
-        <div class="col-12 col-md-4 mb-4">
-          <div class="table-responsive">
-            <h2>Actors</h2>
-            <table class="table table-striped">
-              <thead>
-                <tr><th>Actor</th><th>Birthdate</th></tr>
-              </thead>
-              <tbody>
-                <tr th:each="m : ${lastTen}">
-                  <td th:text="${m.name}">Name</td>
-                  <td th:text="${m.birthDate}">YYYY-MM-DD</td>
-                </tr>
-              </tbody>
-            </table>
+    <div class="container my-5">
+      <div class="row g-4">
+
+        <!-- Latest Actors -->
+        <div class="col-12 col-md-4">
+          <div class="card shadow-sm h-100">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">
+                <i class="bi bi-people-fill me-2"></i>Latest Actors
+              </h5>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-striped mb-0">
+                  <thead>
+                    <tr>
+                      <th>Actor</th>
+                      <th>Birth Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr th:each="actor : ${lastTen}">
+                      <td th:text="${actor.name}">Name</td>
+                      <td th:text="${actor.birthDate}">YYYY-MM-DD</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div th:if="${#lists.isEmpty(lastTen)}"
+                   class="text-center text-muted py-4">
+                No recent actors.
+              </div>
+            </div>
+            <div class="card-footer text-end">
+              <a th:href="@{/actors}" class="btn btn-sm btn-outline-primary">
+                View All Actors
+              </a>
+            </div>
           </div>
         </div>
-      
-        <!-- Movies column -->
-        <div class="col-12 col-md-4 mb-4">
-          <div class="table-responsive">
-            <h2>Movies</h2>
-            <table class="table table-striped">
-              <thead>
-                <tr><th>Title</th><th>Year</th></tr>
-              </thead>
-              <tbody>
-                <tr th:each="m : ${latestThreeMovies}">
-                  <td th:text="${m.title}">Title</td>
-                  <td th:text="${m.releaseYear}">Year</td>
-                </tr>
-              </tbody>
-            </table>
+
+        <!-- Latest Movies -->
+        <div class="col-12 col-md-4">
+          <div class="card shadow-sm h-100">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">
+                <i class="bi bi-film me-2"></i>Latest Movies
+              </h5>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-striped mb-0">
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Year</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr th:each="m : ${latestThreeMovies}">
+                      <td th:text="${m.title}">Title</td>
+                      <td th:text="${m.releaseYear}">Year</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div th:if="${#lists.isEmpty(latestThreeMovies)}"
+                   class="text-center text-muted py-4">
+                No recent movies.
+              </div>
+            </div>
+            <div class="card-footer text-end">
+              <a th:href="@{/movies}" class="btn btn-sm btn-outline-primary">
+                View All Movies
+              </a>
+            </div>
           </div>
         </div>
-      
-        <!-- Genres column -->
-        <div class="col-12 col-md-4 mb-4">
-          <div class="table-responsive">
-            <h2>Genres</h2>
-            <table class="table table-striped">
-              <thead>
-                <tr><th>Genre</th></tr>
-              </thead>
-              <tbody>
-                <tr th:each="m : ${latestThree}">
-                  <td th:text="${m.name}">Genre</td>
-                </tr>
-              </tbody>
-            </table>
+
+        <!-- Latest Genres -->
+        <div class="col-12 col-md-4">
+          <div class="card shadow-sm h-100">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">
+                <i class="bi bi-tags-fill me-2"></i>Latest Genres
+              </h5>
+            </div>
+            <div class="card-body p-0">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"
+                    th:each="g : ${latestThree}"
+                    th:text="${g.name}">
+                  Genre Name
+                </li>
+              </ul>
+              <div th:if="${#lists.isEmpty(latestThree)}"
+                   class="text-center text-muted py-4">
+                No recent genres.
+              </div>
+            </div>
+            <div class="card-footer text-end">
+              <a th:href="@{/genres}" class="btn btn-sm btn-outline-primary">
+                View All Genres
+              </a>
+            </div>
           </div>
         </div>
-      
+
       </div>
     </div>
-    
-    <div th:replace="~{mainlayout :: footer}"> </div>
 
+    <div th:replace="~{mainlayout :: footer}"></div>
   </body>
 </html>

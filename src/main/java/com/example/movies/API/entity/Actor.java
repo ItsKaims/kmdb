@@ -8,13 +8,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 @Entity
-@Table(name = "actors")
+@Table(name = "actors",
+uniqueConstraints = @UniqueConstraint(columnNames = "name")
+)
 public class Actor {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String name;
 
   @Column(nullable = false)
