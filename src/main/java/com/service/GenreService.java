@@ -6,6 +6,10 @@ import com.example.movies.API.exception.ResourceNotFoundException;
 import com.example.movies.API.repository.GenreRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.orm.jpa.JpaSystemException;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
+
 
 import java.util.List;
 import java.util.Set;
@@ -21,7 +25,12 @@ public class GenreService {
 
   /** 1) Create a new genre */
   public Genre create(Genre genre) {
-    return genreRepo.save(genre);
+    try {
+      return genreRepo.saveAndFlush(genre);
+    } catch (JpaSystemException | ConstraintViolationException ex) {
+      // wrap it
+      throw new DataIntegrityViolationException("duplicate-genre", ex);
+    }
   }
 
   /** 2) Retrieve all genres */

@@ -8,9 +8,11 @@ import javax.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 
+
+
 public class GenreDTO {
     @NotBlank(message = "Genre cannot be blank")
-    @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
+    @Size(min = 3, max = 15, message = "Name must be between 2 and 50 characters")
     private String genreName;
 
 
