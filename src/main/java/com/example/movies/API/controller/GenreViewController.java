@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.dao.DataIntegrityViolationException;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import org.springframework.dao.DataAccessException;
 
 

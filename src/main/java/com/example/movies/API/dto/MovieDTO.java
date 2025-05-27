@@ -2,6 +2,9 @@ package com.example.movies.API.dto;
 
 import java.time.LocalDate;
 import java.util.Set;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class MovieDTO {
     private String title;

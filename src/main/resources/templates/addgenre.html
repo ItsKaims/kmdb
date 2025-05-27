@@ -7,7 +7,7 @@
     <div>
       <h2 style="color: blue;">Add genre to database</h2>
     </div><br>
-      <form style = color:blue;  th:action="@{/addgenre}" method="post" th:object="${genre}">
+      <form style = "color:blue;"  th:action="@{/addgenre}" method="post" th:object="${genre}">
          <label for="genre">Genre:</label>
         <input type="text" id="name" th:field="*{genreName}" />
         
