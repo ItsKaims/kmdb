@@ -9,6 +9,9 @@ import com.example.movies.API.repository.GenreRepository;
 import com.example.movies.API.repository.MovieRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.orm.jpa.JpaSystemException;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 
 
 import java.util.List;
@@ -31,22 +34,41 @@ public class MovieService {
     this.actorRepo = actorRepo;
   }
 
-  public Movie create(String title, int year, int duration,
-                      Set<Long> genreIds, Set<Long> actorIds) {
+  public Movie create(String title,
+                      int year,
+                      int duration,
+                      Set<Long> genreIds,
+                      Set<Long> actorIds) {
+
     Movie m = new Movie(title, year, duration);
+
+    // attach genres
     genreIds.stream()
       .map(genreRepo::findById)
       .map(opt -> opt.orElseThrow(() ->
         new ResourceNotFoundException("Genre not found with id " + opt)))
       .forEach(m.getGenres()::add);
+
+    // attach actors
     actorIds.stream()
       .map(actorRepo::findById)
       .map(opt -> opt.orElseThrow(() ->
         new ResourceNotFoundException("Actor not found with id " + opt)))
       .forEach(m.getActors()::add);
-    return movieRepo.save(m);
-  }
 
+    try {
+      // fires the INSERT immediately, including join‐table writes
+      return movieRepo.saveAndFlush(m);
+    } catch (JpaSystemException jse) {
+      // unwrap to see if it was a UNIQUE‐constraint on title
+      Throwable root = jse.getCause();
+      if (root instanceof org.hibernate.exception.ConstraintViolationException ||
+          root.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
+        throw new DataIntegrityViolationException("duplicate-movie", jse);
+      }
+      throw jse;
+    }
+  }
   public List<Movie> getAll() {
     return movieRepo.findAll();
   }

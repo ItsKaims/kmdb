@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataAccessException;
 
+
 @Controller
 public class MovieViewController {
     private final GenreService genreService;
@@ -51,6 +52,7 @@ public class MovieViewController {
         model.addAttribute("genres", genreService.getAll());
         // 1) If JSR-303 validation failed (e.g. @NotBlank), re-show form immediately
         if (bindingResult.hasErrors()) {
+            populateFormLists(model);
             return "addmovie";  
         } try {
         movieService.create(
@@ -63,14 +65,20 @@ public class MovieViewController {
         } catch(DataAccessException ex) {
             // 3) A UNIQUE constraint (or other DB error) happened — assume duplicate name
             bindingResult.rejectValue(
-                "genreName",      // the field in your DTO
+                "title",      // the field in your DTO
                 "duplicate",      // a code you can use in your messages.properties
                 "That genre name already exists."
             );
+            populateFormLists(model);
             return "addmovie";   // re-show the form, with the field error now attached
         } 
         // 4) success!
         model.addAttribute("successMessage", "Genre added!");
         return "addmovie"; 
+    }
+
+    private void populateFormLists(Model model) {
+        model.addAttribute("genres", genreService.getAll());
+        model.addAttribute("actors", actorService.getAll());
     }
 }

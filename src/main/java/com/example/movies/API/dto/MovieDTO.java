@@ -8,6 +8,9 @@ import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.PastOrPresent;
+import java.util.HashSet;
+import java.util.Set;
+import jakarta.validation.constraints.*;
 
 public class MovieDTO {
     @NotBlank(message = "Movie name cannot be empty")
@@ -21,10 +24,10 @@ public class MovieDTO {
     private int duration;
     @NotNull(message ="Please select at least one genre")
     @Size(min = 1, message = "Select at least one genre from list")
-    private Set<Long> genres;
+    private Set<Long> genres = new HashSet<>();
     @NotNull(message = "Please select at least one actor")
     @Size(min = 1, message = "Select at least one actor from list")
-    private Set<Long> actors;
+    private Set<Long> actors = new HashSet<>();
 
 
     // Constructors (no-args and all-args if needed)
