@@ -6,6 +6,8 @@ import com.example.movies.API.entity.Genre;
 import com.example.movies.API.service.GenreService;
 import com.example.movies.API.dto.GenreDTO;
 import com.example.movies.API.dto.ActorDTO;
+import com.example.movies.API.entity.Genre;
+import com.example.movies.API.entity.Movie;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +18,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.dao.DataIntegrityViolationException;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataAccessException;
-
+import org.springframework.web.bind.annotation.PathVariable;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 public class GenreViewController {
@@ -25,7 +29,7 @@ public class GenreViewController {
     public GenreViewController(GenreService genreService) {
         this.genreService = genreService;   
     }
-
+    
     @GetMapping("/addgenre")
     public String showAddGenreForm(Model model) {
         model.addAttribute("genre", new GenreDTO());
@@ -33,7 +37,7 @@ public class GenreViewController {
     }
 
  @PostMapping("/addgenre")
-public String addGenre(
+    public String addGenre(
     @Valid @ModelAttribute("genre") GenreDTO genreDTO,
     BindingResult bindingResult,
     Model model
@@ -61,5 +65,25 @@ public String addGenre(
     // 4) success!
     model.addAttribute("successMessage", "Genre added!");
     return "addgenre";     // or whatever view you want
-}
+    }
+
+    @GetMapping("/genres/{id}")
+    public String showGenreDetails(@PathVariable Long id, Model model) {
+        // 1) Load the Genre or throw 404
+        Genre genre = genreService.getById(id);
+
+        // 2) Get all movies in that genre
+        Set<Movie> movies = genre.getMovies();
+
+        // 3) From those movies, collect all unique actors
+        Set<Actor> actors = movies.stream()
+                                .flatMap(m -> m.getActors().stream())
+                                .collect(Collectors.toSet());
+
+        // 4) Expose to Thymeleaf
+        model.addAttribute("genre",  genre);
+        model.addAttribute("movies", movies);
+        model.addAttribute("actors", actors);
+        return "genre-details";
+    }
 }

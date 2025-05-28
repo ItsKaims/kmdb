@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{mainlayout :: head}"></head>
+  <body>
+    <div th:replace="~{mainlayout :: nav}"></div>
+
+    <div class="container my-5">
+      <h2>Search results for "<span th:text="${query}">...</span>"</h2>
+
+      <!-- Actors -->
+      <div th:if="${actorResults}">
+        <h4>Actors</h4>
+        <ul class="list-group mb-4">
+          <li class="list-group-item"
+              th:each="a : ${actorResults}">
+            <a th:href="@{/actors/{id}(id=${a.id})}"
+               th:text="${a.name}">Actor Name</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Movies -->
+      <div th:if="${movieResults}">
+        <h4>Movies</h4>
+        <ul class="list-group mb-4">
+          <li class="list-group-item"
+              th:each="m : ${movieResults}">
+            <a th:href="@{/movies/{id}(id=${m.id})}"
+               th:text="${m.title}">Movie Title</a>
+            <small class="text-muted">(<span th:text="${m.releaseYear}">Year</span>)</small>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Genres -->
+      <div th:if="${genreResults}">
+        <h4>Genres</h4>
+        <ul class="list-group">
+          <li class="list-group-item"
+              th:each="g : ${genreResults}">
+            <a th:href="@{/genres/{id}(id=${g.id})}"
+               th:text="${g.name}">Genre Name</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- If nothing found anywhere -->
+      <div th:if="${#lists.isEmpty(actorResults) 
+                   and #lists.isEmpty(movieResults) 
+                   and #lists.isEmpty(genreResults)}"
+           class="alert alert-warning mt-4">
+        No results found.
+      </div>
+    </div>
+
+    <div th:replace="~{mainlayout :: footer}"></div>
+  </body>
+</html>

@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface GenreRepository extends JpaRepository<Genre, Long> {
     List<Genre> findTop10ByOrderByIdDesc();
+    List<Genre> findAllByOrderByNameAsc();
+    List<Genre> findByNameContainingIgnoreCase(String name);
 }

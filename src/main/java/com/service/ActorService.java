@@ -59,11 +59,15 @@ public class ActorService {
     actorRepo.delete(actor);
   }
 
-  public List<Actor> getLatestTen() {
+  public List<Actor> getLatestTenActors() {
     // Option A: custom query method on repo
     return actorRepo.findTop10ByOrderByIdDesc();
     // — or Option B: use Pageable
     // Pageable topTen = PageRequest.of(0,10, Sort.by("id").descending());
     // return actorRepo.findAll(topTen).getContent();
+  }
+
+   public List<Actor> getAllActorsSortedByName() {
+    return actorRepo.findAllByOrderByNameAsc();
   }
 }

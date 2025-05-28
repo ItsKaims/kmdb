@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
 @Entity
 @Table(name = "actors",
 uniqueConstraints = @UniqueConstraint(columnNames = "name")

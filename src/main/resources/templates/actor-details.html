@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{mainlayout :: head}"></head>
+<body>
+  <div th:replace="~{mainlayout :: nav}"></div>
+
+  <div class="container my-5">
+    <h2 th:text="${actor.name}">Actor Name</h2>
+
+    <h4>Movies</h4>
+    <ul class="list-group mb-4">
+      <li class="list-group-item" th:each="m : ${movies}">
+        <a th:href="@{/movies/{id}(id=${m.id})}" th:text="${m.title}"></a>
+      </li>
+    </ul>
+
+    <h4>Genres</h4>
+    <ul class="list-group">
+      <li class="list-group-item" th:each="g : ${genres}" th:text="${g.name}"></li>
+    </ul>
+  </div>
+
+  <div th:replace="~{mainlayout :: footer}"></div>
+</body>
+</html>

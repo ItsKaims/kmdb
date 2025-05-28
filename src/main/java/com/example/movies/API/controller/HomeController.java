@@ -42,30 +42,30 @@ public class HomeController {
         model.addAttribute("actors", actorService.getAll());
         model.addAttribute("movies", movieService.getAll());
         model.addAttribute("genres", genreService.getAll());
-        model.addAttribute("lastTen", actorService.getLatestTen());
-        model.addAttribute("latestThree", genreService.getLatestThree());
-        model.addAttribute("latestThreeMovies", movieService.getLatestThree());
+        model.addAttribute("latestTenActors", actorService.getLatestTenActors());
+        model.addAttribute("latestTenGenres", genreService.getLatestTenGenres());
+        model.addAttribute("latestTenMovies", movieService.getLatestTenMovies());
         return "index";    
     }
 
     @GetMapping("/movies")
     public String movies(Model model) {
         model.addAttribute("pageTitle", "Movies");
-        model.addAttribute("movies", movieService.getAll());
+        model.addAttribute("movies", movieService.getAllMoviesSortedByName());
         return "movies";   
     }
 
     @GetMapping("/genres")
     public String genres(Model model) {
         model.addAttribute("pageTitle", "Genres");
-        model.addAttribute("genres", genreService.getAll());
+        model.addAttribute("genres", genreService.getAllGenresSortedByName());
         return "genres";  
     }
 
     @GetMapping("/actors")
     public String actors(Model model) {
         model.addAttribute("pageTitle", "Actors");
-        model.addAttribute("actors", actorService.getAll());
+        model.addAttribute("actors", actorService.getAllActorsSortedByName());
         return "actors";
     }
 

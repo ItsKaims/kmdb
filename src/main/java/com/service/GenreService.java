@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
-
+import java.util.Optional;
 
 import java.util.List;
 import java.util.Set;
@@ -76,11 +76,16 @@ public class GenreService {
     genreRepo.delete(genre);
   }
 
-  public List<Genre> getLatestThree() {
+  public List<Genre> getLatestTenGenres() {
     // Option A: custom query method on repo
     return genreRepo.findTop10ByOrderByIdDesc();
     // — or Option B: use Pageable
     // Pageable topTen = PageRequest.of(0,10, Sort.by("id").descending());
     // return actorRepo.findAll(topTen).getContent();
   }
+
+  public List<Genre> getAllGenresSortedByName() {
+    return genreRepo.findAllByOrderByNameAsc();
+  }
+
 }

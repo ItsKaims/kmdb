@@ -8,20 +8,23 @@
     <div class="container my-5">
 
       <!-- Search form row -->
-      <div class="row justify-content-center mb-4">
+      <div class="row justify-content-center mb-4" style="background-color:rgb(18, 119, 214); color: aliceblue; ">
         <div class="col-md-8">
           <form th:action="@{/search}" method="get">
             <div class="input-group input-group-lg">
               <input
                 type="search"
                 name="query"
+                th:value="${query}"
                 class="form-control"
-                placeholder="Search..."
+                placeholder="Search Movie/Actor/Genre"
                 aria-label="Search">
-              <button class="btn btn-outline-secondary" type="submit">
+              <button class="btn btn-outline-secondary" type="submit" style="color: aliceblue;">
                 <i class="bi bi-search me-1"></i>Search
               </button>
             </div>
+            <!-- error message when query is blank -->
+            <div th:if="${queryError}" class="text-danger mt-1" th:text="${queryError}"></div>
             <div class="mt-3 text-center">
               <div class="form-check form-check-inline">
                 <input
@@ -30,7 +33,7 @@
                   name="criteria"
                   id="criteriaAll"
                   value="all"
-                  checked>
+                  th:checked="${criteria=='all'}">
                 <label class="form-check-label" for="criteriaAll">Everywhere</label>
               </div>
               <div class="form-check form-check-inline">
@@ -86,14 +89,16 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr th:each="actor : ${lastTen}">
-                      <td th:text="${actor.name}">Name</td>
+                    <tr th:each="actor : ${latestTenActors}">
+                      <td>
+                        <a th:href="@{/actors/{id}(id=${actor.id})}" th:text="${actor.name}">Actor</a>
+                      </td>
                       <td th:text="${actor.birthDate}">YYYY-MM-DD</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <div th:if="${#lists.isEmpty(lastTen)}"
+              <div th:if="${#lists.isEmpty(latestTenActors)}"
                    class="text-center text-muted py-4">
                 No recent actors.
               </div>
@@ -124,14 +129,16 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr th:each="m : ${latestThreeMovies}">
-                      <td th:text="${m.title}">Title</td>
+                    <tr th:each="m : ${latestTenMovies}">
+                      <td>
+                        <a th:href="@{/movies/{id}(id=${m.id})}" th:text="${m.title}">Title</a>
+                      </td>
                       <td th:text="${m.releaseYear}">Year</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <div th:if="${#lists.isEmpty(latestThreeMovies)}"
+              <div th:if="${#lists.isEmpty(latestTenMovies)}"
                    class="text-center text-muted py-4">
                 No recent movies.
               </div>
@@ -149,20 +156,29 @@
           <div class="card shadow-sm h-100">
             <div class="card-header bg-primary text-white">
               <h5 class="mb-0">
-                <i class="bi bi-tags-fill me-2"></i>Latest Genres
+                <i class="bi bi-film me-2"></i>Latest Genres
               </h5>
             </div>
             <div class="card-body p-0">
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item"
-                    th:each="g : ${latestThree}"
-                    th:text="${g.name}">
-                  Genre Name
-                </li>
-              </ul>
-              <div th:if="${#lists.isEmpty(latestThree)}"
+              <div class="table-responsive">
+                <table class="table table-striped mb-0">
+                  <thead>
+                    <tr>
+                      <th>Genre</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr th:each="m : ${latestTenGenres}">
+                      <td>
+                         <a th:href="@{/genres/{id}(id=${m.id})}" th:text="${m.name}">Genre</a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div th:if="${#lists.isEmpty(latestTenGenres)}"
                    class="text-center text-muted py-4">
-                No recent genres.
+                No recent movies.
               </div>
             </div>
             <div class="card-footer text-end">
@@ -172,10 +188,9 @@
             </div>
           </div>
         </div>
-
-      </div>
     </div>
 
-    <div th:replace="~{mainlayout :: footer}"></div>
+    <div th:replace="~{mainlayout :: footer}" style=" position: fixed; bottom: 0; width: 100%; margin-left: 0px;
+    grid-column-start: 1; "></div>
   </body>
 </html>

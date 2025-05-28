@@ -1,0 +1,10 @@
+/* remove underlines everywhere */
+a {
+  text-decoration: none !important;
+}
+
+/* optional: restore underline on hover */
+a:hover,
+a:focus {
+  text-decoration: underline !important;
+}
