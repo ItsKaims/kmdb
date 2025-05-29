@@ -8,3 +8,129 @@ a:hover,
 a:focus {
   text-decoration: underline !important;
 }
+
+/*Radio buttons styling*/
+/* 1) Remove the native radio UI */
+.form-check-input[type="radio"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 1em;
+  height: 1em;
+  cursor: pointer;
+  background-color: transparent;
+  margin: 0.2em 0.3em 0.2em 0; /* tweak to align with label text */
+}
+
+/* 2) When checked, show just the green circle—no inner dot */
+.form-check-input[type="radio"]:checked {
+  background-color: rgba(4, 0, 255, 0.9) !important;  /* Bootstrap “success” green */
+  border-radius: 50%;
+  border: none;
+}
+
+/* 3) Optional: hover/focus feedback */
+.form-check-input[type="radio"]:hover {
+  background-color: rgba(4, 0, 255, 0.9);  /* slightly darker green */
+}
+.form-check-input[type="radio"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.25rem rgba(40,167,69,0.25);
+}
+
+/*search box styling*/
+/* 1) The outer “pill” wrapper */
+.search-bar {
+  background: #ffffff;                          /* dark shell */
+  border-radius: 50px;                       /* pill ends */
+  overflow: hidden;                          /* hide child corners */
+  box-shadow: 0 0 16px  rgba(246, 52, 9, 0.9);          /* neon glow */
+  transition: box-shadow 0.2s ease;
+  color: lightslategray;
+}
+
+/* glow the whole thing when input is focused */
+.search-bar:focus-within {
+  box-shadow: 0 0 16px rgba(4, 0, 255, 0.9);
+}
+
+/* 2) The search input itself */
+.search-bar .form-control {
+  background: transparent;   /* see the dark shell */
+  border: none;              /* remove default border */
+  color: black;               /* white text */
+  padding: 0.75rem 1rem;     /* vertical & horizontal padding */
+}
+
+/* make the placeholder text lightgrey */
+.search-bar .form-control::placeholder {
+  color: rgb(189, 192, 195);
+  opacity: 1; /* make sure it’s not faded */
+}
+
+/* 3) The button on the right */
+.search-bar .btn {
+  background: transparent;                          /* blend in */
+  border: none;                                     /* no default border */
+  color:  rgb(189, 192, 195);                                      /* white text */
+  border-left: 2px solid lightgray;               /* subtle separator */
+  padding: 0.75rem 1.5rem;                          /* match input height */
+  box-shadow: none;
+
+}
+
+/* 4) Hover & focus states */
+.search-bar .form-control:hover,
+.search-bar .btn:hover {
+  color: black;  /* pinkish on hover */
+}
+
+.search-bar .form-control:focus,
+.search-bar .btn:focus {
+  outline: none;   /* remove ugly focus ring */
+}
+
+/* 5) Optional: darken background on hover of the whole bar */
+.search-bar:hover {
+  background: #ffffff;
+}
+
+/*Small search form styling*/
+/* 1) The outer form wrapper */
+.search-form {
+  color: #000;              /* default text color inside */
+}
+
+/* 2) The input */
+.search-input {
+  background-color: aliceblue !important;
+  color: #000;              /* user-entered text black */
+  border: 1px solid #ccc;
+}
+.search-input::placeholder {
+  color: lightgrey;         /* placeholder light grey */
+  opacity: 1;
+}
+.search-input:not(:placeholder-shown) {
+  color: black !important;
+}
+.search-input:hover,
+.search-input:focus {
+  color: #000 !important;   /* ensure text stays black */
+  outline: none;
+  box-shadow: none;
+}
+
+/* 3) The button */
+.search-button {
+  background-color: aliceblue;
+  color: #000;              /* black text */
+  border: 1px solid #ccc;
+}
+.search-button:hover,
+.search-button:focus {
+  background-color: #e0e8f0; /* slightly darker on hover */
+  color: #000;
+  outline: none;
+  box-shadow: none;
+}

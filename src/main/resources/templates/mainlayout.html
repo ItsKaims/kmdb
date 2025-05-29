@@ -63,16 +63,15 @@
             </li>
           </ul>
 
-          <form class="d-flex" role="search" th:action="@{/search}" method="get" style="color: black;">
+          <form class="d-flex search-form" role="search" th:action="@{/search}" method="get">
             <input
-              class="form-control me-2"
+              class="form-control me-2 search-input"
               type="search"
-              placeholder="Search"
-              aria-label="Search"
               name="query"
-              th:value="${searchQuery}" style="background-color: aliceblue ;"
-            >
-            <button class="btn btn-outline-light" type="submit" style="background-color: aliceblue ; color: black; ">Search</button>
+              th:value="${searchQuery}"
+              placeholder="Search"
+              aria-label="Search">
+            <button class="btn search-button" type="submit">Search</button>
           </form>
         </div>
       </div>
