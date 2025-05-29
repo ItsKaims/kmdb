@@ -6,6 +6,26 @@
     <div th:replace="~{mainlayout :: nav}"></div>
 
     <div class="container my-5">
+      <!-- Flash message -->
+  <div th:if="${successMessage}"
+       class="alert alert-success alert-dismissible fade show"
+       role="alert">
+    <span th:text="${successMessage}">Success!</span>
+    <button type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"></button>
+  </div>
+  <!-- Error message -->
+<div th:if="${errorMessage}"
+     class="alert alert-danger alert-dismissible fade show"
+     role="alert">
+  <span th:text="${errorMessage}">Could not delete genre.</span>
+  <button type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"></button>
+</div>
       <div class="row justify-content-center">
         <div class="col-md-8">
           <div class="card shadow-sm">
@@ -17,9 +37,25 @@
             <div class="card-body p-0">
               <ul class="list-group list-group-flush">
                 <li class="list-group-item d-flex justify-content-between align-items-center"
-                    th:each="genre : ${genres}"
-                    th:text="${genre.name}">
-                  Genre Name
+                    th:each="genre : ${genres}">
+                    <!-- Genre name -->
+                    <span th:text="${genre.name}">Genre Name</span>
+                  
+                    <!-- Modify button -->
+                    <button type="button"
+        class="btn btn-sm btn-outline-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#modifyGenreModal"
+        th:attr="
+          data-url-edit=@{/genres/edit/{id}(id=${genre.id})},
+          data-url-delete=@{/genres/delete/{id}(id=${genre.id})},
+          data-name=${genre.name}">
+  Modify
+</button>
+              
+              </div>
+
+                  
                 </li>
               </ul>
               <div th:if="${#lists.isEmpty(genres)}"
@@ -38,5 +74,119 @@
     </div>
 
     <div th:replace="~{mainlayout :: footer}"></div>
+
+    <!-- Modify‐Genre Modal -->
+<div
+  class="modal fade"
+  id="modifyGenreModal"
+  tabindex="-1"
+  aria-labelledby="modifyGenreModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="modifyGenreModalLabel">Modify Genre</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- MODIFY FORM -->
+        <form id="modifyGenreForm"
+              th:action="@{/genres/edit/{id}(id=${genreId})}"
+              method="post"
+              class="mb-3">
+          <div class="mb-3">
+            <label for="genreNameInput" class="form-label">
+              Name
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="genreNameInput"
+              name="name"
+              required
+              minlength="2"
+              maxlength="50">
+          </div>
+        </form>
+
+        <!-- DELETE FORM -->
+        <form id="deleteGenreForm"
+              th:action="@{/genres/delete/{id}(id=${genreId})}"
+              method="post"
+              onsubmit="return confirm('Really delete this genre?');">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="forceDeleteCheck"
+              name="force"
+              value="true">
+            <label class="form-check-label" for="forceDeleteCheck">
+              Also unlink from movies
+            </label>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal">
+          Cancel
+        </button>
+
+        <!-- Delete button submits the delete form -->
+        <button
+          type="submit"
+          form="deleteGenreForm"
+          class="btn btn-danger">
+          Delete
+        </button>
+
+        <!-- Save button submits the modify form -->
+        <button
+          type="submit"
+          form="modifyGenreForm"
+          class="btn btn-primary">
+          Save changes
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// wire up the modal just once
+document.addEventListener('DOMContentLoaded', function() {
+  var modal = document.getElementById('modifyGenreModal');
+  modal.addEventListener('show.bs.modal', function(e) {
+    var btn       = e.relatedTarget;
+    var urlEdit   = btn.getAttribute('data-url-edit');
+    var urlDelete = btn.getAttribute('data-url-delete');
+    var name      = btn.getAttribute('data-name');
+
+    // Set both form actions
+    modal.querySelector('#modifyGenreForm').action = urlEdit;
+    modal.querySelector('#deleteGenreForm').action = urlDelete;
+
+    // Prefill the name and clear the checkbox
+    var nameInput = modal.querySelector('#genreNameInput');
+    nameInput.value = name;
+    modal.querySelector('#forceDeleteCheck').checked = false;
+
+    // Update the modal title if you like
+    modal.querySelector('#modifyGenreModalLabel')
+         .textContent = 'Modify Genre: ' + name;
+  });
+});
+</script>
   </body>
 </html>

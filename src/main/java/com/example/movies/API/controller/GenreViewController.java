@@ -21,6 +21,10 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.PathVariable;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.example.movies.API.exception.ResourceNotFoundException;
+
 
 @Controller
 public class GenreViewController {
@@ -86,4 +90,40 @@ public class GenreViewController {
         model.addAttribute("actors", actors);
         return "genre-details";
     }
+
+    @PostMapping("genres/edit/{id}")
+    public String updateGenre(
+        @PathVariable Long id,
+        @RequestParam("name") String newName,
+        RedirectAttributes attrs
+    ) {
+        // call your service to update the genre
+        try {
+        genreService.updateName(id, newName);
+        attrs.addFlashAttribute("successMessage", "Genre updated!");
+        } catch(ResourceNotFoundException ex) {
+        attrs.addFlashAttribute("errorMessage", ex.getMessage());
+        }
+    return "redirect:/genres";  // back to the all-genres page
+  }
+
+    @PostMapping("genres/delete/{id}")
+    public String deleteGenre(
+        @PathVariable Long id,
+        @RequestParam(name="force", defaultValue="false") boolean force,
+        RedirectAttributes attrs
+    ) {
+    try {
+        genreService.delete(id, force);
+        attrs.addFlashAttribute("successMessage",
+        force
+          ? "Genre and its movie‐links have been removed."
+          : "Genre deleted!");
+    } catch (IllegalStateException ex) {
+        attrs.addFlashAttribute("errorMessage", ex.getMessage());
+    }
+    return "redirect:/genres";
+}
+
+
 }
