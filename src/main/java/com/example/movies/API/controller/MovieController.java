@@ -2,9 +2,13 @@ package com.example.movies.API.controller;
 
 import com.example.movies.API.entity.Actor;
 import com.example.movies.API.entity.Movie;
+import com.example.movies.API.dto.MoviePatchDTO;
 import com.example.movies.API.service.MovieService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import com.example.movies.API.dto.MovieActorsPatchDto;
+import org.springframework.validation.BindingResult;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Set;
@@ -47,27 +51,55 @@ public class MovieController {
     return movieService.getById(id);
   }
 
+   /**
+   * Fetches a single Movie (or throws 404 if not found), then returns its actors set.
+   */
   // Get all actors in a movie
   @GetMapping("/{id}/actors")
   public Set<Actor> getActors(@PathVariable Long id) {
-    return movieService.getById(id).getActors();
+      return movieService.getActorsInMovie(id);
   }
 
-  @PatchMapping("/{id}")
-  public Movie update(
-      @PathVariable Long id,
-      @RequestParam(required = false) String title,
-      @RequestParam(required = false) Integer releaseYear,
-      @RequestParam(required = false) Integer duration,
-      @RequestParam(required = false) Set<Long> genres,
-      @RequestParam(required = false) Set<Long> actors
-  ) {
-    return movieService.update(id, title, releaseYear, duration, genres, actors);
-  }
+      @PatchMapping("/{id}")
+    public Movie update(
+        @PathVariable Long id,
+        @Valid @RequestBody MoviePatchDTO dto
+    ) {
+        return movieService.update(
+            id,
+            dto.getTitle(),      // Null if not provided
+            dto.getReleaseYear(), // Null if not provided
+            dto.getDuration(),    // Null if not provided
+            dto.getGenres(),      // Null if not provided
+            dto.getActors()       // Null if not provided
+        );
+    }
 
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void delete(@PathVariable Long id) {
     movieService.delete(id);
+  }
+
+  /**
+   * PATCH /api/movies/{id}/actors
+   * Body: { "actorIds": [3, 7, 12] }
+   * Replaces this movie’s actors with exactly those IDs.
+   */
+  @PatchMapping("/{id}/actors")
+  public Movie patchMovieActors(
+      @PathVariable Long id,
+      @Valid @RequestBody MovieActorsPatchDto dto,
+      BindingResult bindingResult
+  ) {
+    // 1) If validation on dto fails (e.g. actorIds is null or empty), throw 400
+    if (bindingResult.hasErrors()) {
+      String errorMsg = bindingResult.getFieldError()
+          .getField() + ": " + bindingResult.getFieldError().getDefaultMessage();
+      throw new IllegalArgumentException(errorMsg);
+    }
+
+    // 2) Delegate to service
+    return movieService.updateMovieActors(id, dto.getActorIds());
   }
 }

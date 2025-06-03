@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
+import java.util.HashSet;
 
 
 import java.util.List;
@@ -137,5 +138,41 @@ public class MovieService {
 
    public List<Movie> getAllMoviesSortedByName() {
     return movieRepo.findAllByOrderByTitleAsc();
+  }
+
+  // In MovieService:
+  public Set<Actor> getActorsInMovie(Long movieId) {
+      Movie movie = movieRepo.findById(movieId)
+          .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + movieId));
+      Set<Actor> actors = movie.getActors();
+      if (actors.isEmpty()) {
+          throw new ResourceNotFoundException("No actors found for movie with id " + movieId);
+      }
+      return actors;
+  }
+
+  /**
+   * Replace this movie’s actors with exactly the given actor IDs.
+   * Any previously attached actors not in actorIds will be removed;
+   * any new IDs will be added. Throws 404 if movie or any actorId is not found.
+   */
+  public Movie updateMovieActors(Long movieId, Set<Long> actorIds) {
+    // 1) Load the existing movie or throw 404
+    Movie movie = movieRepo.findById(movieId)
+        .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + movieId));
+
+    // 2) Build a fresh Set<Actor> from actorIds
+    Set<Actor> newActors = new HashSet<>();
+    for (Long actorId : actorIds) {
+      Actor actor = actorRepo.findById(actorId)
+          .orElseThrow(() -> new ResourceNotFoundException("Actor not found with id " + actorId));
+      newActors.add(actor);
+    }
+
+    // 3) Replace the movie’s actor set
+    movie.setActors(newActors);
+
+    // 4) Save. JPA will handle the join‐table updates (remove missing, add new).
+    return movieRepo.save(movie);
   }
 }

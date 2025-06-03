@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="~{mainlayout :: head}">
-  </head>
+  <head th:replace="~{mainlayout :: head}"> </head>
   <body>
     <div th:replace="~{mainlayout :: nav}"></div>
 
@@ -11,18 +10,17 @@
           <h3 class="mb-0">Add Movie to Database</h3>
         </div>
         <div class="card-body">
-          <form th:action="@{/addmovie}"
-                th:object="${movie}"
-                method="post">
-
+          <form th:action="@{/addmovie}" th:object="${movie}" method="post">
             <!-- Title -->
             <div class="form-floating mb-3">
-              <input type="text"
-                     th:field="*{title}"
-                     class="form-control"
-                     th:classappend="${#fields.hasErrors('title')}? ' is-invalid' : ''"
-                     id="title"
-                     placeholder="Title">
+              <input
+                type="text"
+                th:field="*{title}"
+                class="form-control"
+                th:classappend="${#fields.hasErrors('title')}? ' is-invalid' : ''"
+                id="title"
+                placeholder="Title"
+              />
               <label for="title">Title</label>
               <div class="invalid-feedback" th:errors="*{title}"></div>
             </div>
@@ -30,14 +28,18 @@
             <!-- Genres (multi-select) -->
             <div class="mb-3">
               <label for="genres" class="form-label">Genres</label>
-              <select multiple
-                      th:field="*{genres}"
-                      class="form-select"
-                      th:classappend="${#fields.hasErrors('genres')}? ' is-invalid' : ''"
-                      id="genres">
-                <option th:each="g : ${genres}"
-                        th:value="${g.id}"
-                        th:text="${g.name}"></option>
+              <select
+                multiple
+                th:field="*{genres}"
+                class="form-select"
+                th:classappend="${#fields.hasErrors('genres')}? ' is-invalid' : ''"
+                id="genres"
+              >
+                <option
+                  th:each="g : ${genres}"
+                  th:value="${g.id}"
+                  th:text="${g.name}"
+                ></option>
               </select>
               <div class="invalid-feedback" th:errors="*{genres}"></div>
             </div>
@@ -45,22 +47,27 @@
             <!-- Release Year & Duration -->
             <div class="row g-3 mb-3">
               <div class="col-md-6 form-floating">
-                <input type="number"
-                       th:field="*{releaseYear}"
-                       class="form-control"
-                       th:classappend="${#fields.hasErrors('releaseYear')}? ' is-invalid' : ''"
-                       id="releaseYear"
-                       placeholder="Release Year">
+                <input
+                  type="number"
+                  th:field="*{releaseYear}"
+                  class="form-control"
+                  th:classappend="${#fields.hasErrors('releaseYear')}? ' is-invalid' : ''"
+                  id="releaseYear"
+                  placeholder="Release Year"
+                />
                 <label for="releaseYear">Release Year</label>
                 <div class="invalid-feedback" th:errors="*{releaseYear}"></div>
               </div>
               <div class="col-md-6 form-floating">
-                <input type="number"
-                       th:field="*{duration}"
-                       class="form-control"
-                       th:classappend="${#fields.hasErrors('duration')}? ' is-invalid' : ''"
-                       id="duration"
-                       placeholder="Duration (min)">
+                <input
+                  type="number"
+                  th:field="*{duration}"
+                  class="form-control"
+                  th:classappend="${#fields.hasErrors('duration')}? ' is-invalid' : ''"
+                  id="duration"
+                  placeholder="Duration (min)"
+                  th:value="*{duration} != null ? *{duration} : 0"
+                />
                 <label for="duration">Duration (min)</label>
                 <div class="invalid-feedback" th:errors="*{duration}"></div>
               </div>
@@ -69,14 +76,18 @@
             <!-- Actors (multi-select) -->
             <div class="mb-4">
               <label for="actors" class="form-label">Actors</label>
-              <select multiple
-                      th:field="*{actors}"
-                      class="form-select"
-                      th:classappend="${#fields.hasErrors('actors')}? ' is-invalid' : ''"
-                      id="actors">
-                <option th:each="a : ${actors}"
-                        th:value="${a.id}"
-                        th:text="${a.name}"></option>
+              <select
+                multiple
+                th:field="*{actors}"
+                class="form-select"
+                th:classappend="${#fields.hasErrors('actors')}? ' is-invalid' : ''"
+                id="actors"
+              >
+                <option
+                  th:each="a : ${actors}"
+                  th:value="${a.id}"
+                  th:text="${a.name}"
+                ></option>
               </select>
               <div class="invalid-feedback" th:errors="*{actors}"></div>
             </div>
@@ -89,7 +100,11 @@
             </div>
 
             <!-- Success Message -->
-            <div th:if="${successMessage}" class="alert alert-success mt-4" role="alert">
+            <div
+              th:if="${successMessage}"
+              class="alert alert-success mt-4"
+              role="alert"
+            >
               <i class="bi bi-check-circle-fill me-2"></i>
               <span th:text="${successMessage}"></span>
             </div>

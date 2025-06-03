@@ -19,6 +19,7 @@ import jakarta.validation.Valid;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.annotation.PathVariable;
+import com.example.movies.API.exception.ResourceNotFoundException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -69,7 +70,8 @@ public class ActorViewController {
   @GetMapping("/actors/{id}")
     public String showActorDetails(@PathVariable Long id, Model model) {
         // 1) Load the Actor or throw 404
-        Actor actor = actorService.getById(id);
+        Actor actor = actorService.getById(id)
+           .orElseThrow(() -> new ResourceNotFoundException("Actor not found with id " + id));
 
         // 2) Get all movies where the actor is and genres
         Set<Movie> movies = actor.getMovies();

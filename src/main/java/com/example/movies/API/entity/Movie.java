@@ -17,10 +17,10 @@ public class Movie {
   private String title;
 
   @Column(nullable = false)
-  private int releaseYear;
+  private Integer releaseYear;
 
   @Column(nullable = false)
-  private int duration;  // minutes
+  private Integer duration;  // minutes
 
   @ManyToMany
   @JoinTable(
@@ -51,10 +51,11 @@ public class Movie {
   public Long getId() { return id; }
   public String getTitle() { return title; }
   public void setTitle(String title) { this.title = title; }
-  public int getReleaseYear() { return releaseYear; }
+  public Integer getReleaseYear() { return releaseYear; }
   public void setReleaseYear(int releaseYear) { this.releaseYear = releaseYear; }
-  public int getDuration() { return duration; }
+  public Integer getDuration() { return duration; }
   public void setDuration(int duration) { this.duration = duration; }
   public Set<Genre> getGenres() { return genres; }
   public Set<Actor> getActors() { return actors; }
+  public void setActors(Set<Actor> actors) { this.actors = actors; }
 }

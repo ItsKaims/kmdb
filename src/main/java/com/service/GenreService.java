@@ -9,8 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
-import java.util.Optional;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.List;
 import java.util.Set;
 
@@ -57,24 +59,23 @@ public class GenreService {
     return genreRepo.save(genre);
   }
 
-  /** 6) Delete a genre; if force=false, prevent deletion when movies exist */
   public void delete(Long id, boolean force) {
-    Genre genre = getById(id);
+    Genre genre = genreRepo.findById(id)  // Changed from getById to findById
+        .orElseThrow(() -> new ResourceNotFoundException("Genre not found with id " + id));
 
     if (!force && !genre.getMovies().isEmpty()) {
-      throw new IllegalStateException(
-        "Cannot delete genre '" + genre.getName() +
-        "' because it has " + genre.getMovies().size() + " associated movies."
-      );
+        throw new IllegalStateException(
+            "Cannot delete genre '" + genre.getName() + 
+            "' because it has " + genre.getMovies().size() + " associated movies."
+        );
     }
 
-    // If forced, break the bidirectional relationship:
     if (force) {
-      genre.getMovies().forEach(m -> m.getGenres().remove(genre));
+        genre.getMovies().forEach(m -> m.getGenres().remove(genre));
     }
 
     genreRepo.delete(genre);
-  }
+}
 
   public List<Genre> getLatestTenGenres() {
     // Option A: custom query method on repo

@@ -5,10 +5,14 @@ import com.example.movies.API.service.GenreService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import com.example.movies.API.entity.Movie;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import com.example.movies.API.exception.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.Set;
 import java.util.Map;
+import java.lang.String;
 
 
 @RestController
@@ -44,12 +48,37 @@ public class GenreController {
   }
 
   @DeleteMapping("/{id}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void delete(
-      @PathVariable Long id,
-      @RequestParam(defaultValue="false") boolean force
-  ) {
-    genreService.delete(id, force);
-  }
+public ResponseEntity<?> delete(
+    @PathVariable Long id,
+    @RequestParam(defaultValue="false") boolean force
+) {
+    try {
+        genreService.delete(id, force);
+        return ResponseEntity.ok().body(
+            Map.of(
+                "status", "success",
+                "message", "Genre with ID " + id + " was successfully deleted",
+                "deletedId", id
+            )
+        );
+    } catch (ResourceNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+            Map.of(
+                "status", "error",
+                "message", "Genre with ID " + id + " not found",
+                "errorCode", "GENRE_NOT_FOUND"
+            )
+        );
+    } catch (IllegalStateException e) {
+        return ResponseEntity.badRequest().body(
+            Map.of(
+                "status", "error",
+                "message", e.getMessage(),
+                "errorCode", "GENRE_HAS_MOVIES",
+                "solution", "Add ?force=true parameter to force deletion"
+            )
+        );
+    }
+}
 
 }

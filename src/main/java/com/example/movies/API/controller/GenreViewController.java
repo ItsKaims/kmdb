@@ -118,7 +118,8 @@ public class GenreViewController {
         attrs.addFlashAttribute("successMessage",
         force
           ? "Genre and its movie‐links have been removed."
-          : "Genre deleted!");
+          : "Genre deleted!");   
+          
     } catch (IllegalStateException ex) {
         attrs.addFlashAttribute("errorMessage", ex.getMessage());
     }
