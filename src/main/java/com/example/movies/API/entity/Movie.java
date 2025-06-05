@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "movies")
@@ -13,13 +16,16 @@ public class Movie {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false, unique = true)
+  @NotBlank(message = "Title is required")
+  @Column(unique = true)
   private String title;
 
-  @Column(nullable = false)
+  @NotNull(message = "Release year is required")
+  @Positive(message = "Release year must be a positive number")
   private Integer releaseYear;
 
-  @Column(nullable = false)
+  @NotNull(message = "Duration is required")
+  @Positive(message = "Duration must be a positive number")
   private Integer duration;  // minutes
 
   @ManyToMany

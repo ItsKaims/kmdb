@@ -132,6 +132,13 @@ public class MovieService {
     movieRepo.delete(m);
   }
 
+  /**
+   * Search movies by title containing the given query (case-insensitive)
+   */
+  public Page<Movie> searchByTitle(String query, Pageable pageable) {
+    return movieRepo.findByTitleContainingIgnoreCase(query, pageable);
+  }
+
   public Page<Movie> getLatestTenMovies(Pageable pageable) {
     // Option A: custom query method on repo
     return movieRepo.findTop10ByOrderByIdDesc(pageable);
@@ -145,14 +152,12 @@ public class MovieService {
   }
 
   // In MovieService:
-  public Set<Actor> getActorsInMovie(Long movieId) {
-      Movie movie = movieRepo.findById(movieId)
+  public Page<Actor> getActorsInMovie(Long movieId, Pageable pageable) {
+      return movieRepo.findById(movieId)
+          .map(movie -> {
+              return actorRepo.findAllByMoviesContains(movie, pageable);
+          })
           .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + movieId));
-      Set<Actor> actors = movie.getActors();
-      if (actors.isEmpty()) {
-          throw new ResourceNotFoundException("No actors found for movie with id " + movieId);
-      }
-      return actors;
   }
 
   /**

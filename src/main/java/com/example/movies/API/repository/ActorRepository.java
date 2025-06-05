@@ -1,6 +1,7 @@
 package com.example.movies.API.repository;
 
 import com.example.movies.API.entity.Actor;
+import com.example.movies.API.entity.Movie;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,9 @@ public interface ActorRepository extends JpaRepository<Actor, Long> {
   );
   // ⓵ Find all actors born exactly on a given date
   Page<Actor> findByBirthDate(LocalDate birthDate,Pageable pageable);
+
+  // Find all actors that appear in a specific movie
+  Page<Actor> findAllByMoviesContains(Movie movie, Pageable pageable);
 
   // ⓶ Find all actors whose name contains “…” (case‐insensitive)
   //     AND whose birthDate matches exactly

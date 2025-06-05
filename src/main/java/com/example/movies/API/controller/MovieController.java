@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PageableDefault;
+import com.example.movies.API.annotation.ValidPagination;
 
 import java.util.Map;
 import java.util.List;
@@ -44,7 +45,7 @@ public class MovieController {
       @RequestParam(required = false) Long genre,
       @RequestParam(required = false) Integer year,
       @RequestParam(required = false) Long actor,
-      Pageable pageable
+      @ValidPagination Pageable pageable
   ) {
     if (genre != null)      return movieService.findByGenre(genre, pageable);
     else if (year != null)  return movieService.findByYear(year, pageable);
@@ -64,10 +65,13 @@ public class MovieController {
    /**
    * Fetches a single Movie (or throws 404 if not found), then returns its actors set.
    */
-  // Get all actors in a movie
+  // Get all actors in a movie with pagination
   @GetMapping("/{id}/actors")
-  public Set<Actor> getActors(@PathVariable Long id) {
-      return movieService.getActorsInMovie(id);
+  public Page<Actor> getActors(
+      @PathVariable Long id,
+      Pageable pageable
+  ) {
+      return movieService.getActorsInMovie(id, pageable);
   }
 
       @PatchMapping("/{id}")
@@ -89,6 +93,17 @@ public class MovieController {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void delete(@PathVariable Long id) {
     movieService.delete(id);
+  }
+
+  /**
+   * Search movies by title containing the given search term (case-insensitive)
+   */
+  @GetMapping("/search")
+  public Page<Movie> searchByTitle(
+      @RequestParam String query,
+      @ValidPagination Pageable pageable
+  ) {
+      return movieService.searchByTitle(query, pageable);
   }
 
   /**
