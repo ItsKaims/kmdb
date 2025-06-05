@@ -9,7 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import com.example.movies.API.dto.MovieActorsPatchDto;
 import org.springframework.validation.BindingResult;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.web.PageableDefault;
 
+import java.util.Map;
 import java.util.List;
 import java.util.Set;
 
@@ -35,21 +40,26 @@ public class MovieController {
   }
 
   @GetMapping
-  public List<Movie> getAll(
+  public Page<Movie> getAll(
       @RequestParam(required = false) Long genre,
       @RequestParam(required = false) Integer year,
-      @RequestParam(required = false) Long actor
+      @RequestParam(required = false) Long actor,
+      Pageable pageable
   ) {
-    if (genre != null)      return movieService.findByGenre(genre);
-    else if (year != null)  return movieService.findByYear(year);
-    else if (actor != null) return movieService.findByActor(actor);
-    else                    return movieService.getAll();
+    if (genre != null)      return movieService.findByGenre(genre, pageable);
+    else if (year != null)  return movieService.findByYear(year, pageable);
+    else if (actor != null) return movieService.findByActor(actor, pageable);
+    else                    return movieService.getAll(pageable);
   }
 
   @GetMapping("/{id}")
-  public Movie getById(@PathVariable Long id) {
-    return movieService.getById(id);
-  }
+  public ResponseEntity<?> getById(@PathVariable Long id) {
+    return movieService.getById(id)
+        .<ResponseEntity<?>>map(ResponseEntity::ok)
+        .orElseGet(() -> ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body(Map.of("error", "Movie not found with id " + id)));
+}
 
    /**
    * Fetches a single Movie (or throws 404 if not found), then returns its actors set.

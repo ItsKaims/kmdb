@@ -5,14 +5,16 @@ import com.example.movies.API.entity.Movie;
 import com.example.movies.API.service.ActorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity; 
-import java.util.Optional; 
+import org.springframework.web.bind.annotation.RestController; 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.web.PageableDefault;
+import com.example.movies.API.exception.ResourceNotFoundException;
 
+import java.util.Optional; 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -33,22 +35,23 @@ public class ActorController {
   }
 
   @GetMapping
-  public List<Actor> getAll(
+  public Page<Actor> getAll(
+    @PageableDefault(size = 20) Pageable pageable,
     @RequestParam(required = false) String name,
     @RequestParam(required = false) 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     LocalDate birthdate
   ) {
     if (name != null && birthdate != null) {
-      return actorService.findByNameAndBirthDate(name, birthdate);
+      return actorService.findByNameAndBirthDate(name, birthdate, pageable);
     }
     if (name != null) {
-      return actorService.findByName(name);
+      return actorService.findByName(name, pageable);
     }
     if (birthdate != null) {
-      return actorService.findByBirthDate(birthdate);
+      return actorService.findByBirthDate(birthdate, pageable);
     }
-    return actorService.getAll();
+    return actorService.getAll(pageable);
   }
   
 
@@ -60,24 +63,38 @@ public class ActorController {
   }
 
   @PatchMapping("/{id}")
-  public Actor update(
+  public ResponseEntity<Actor> update(
       @PathVariable Long id,
       @RequestBody Actor partial  // name and/or birthDate
   ) {
-    return actorService.update(
-      id,
-      partial.getName(),
-      partial.getBirthDate()
+    Actor existingActor = actorService.getById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Actor not found with id " + id));
+    
+    String name = partial.getName();
+    LocalDate birthDate = partial.getBirthDate();
+    
+    if (name == null && birthDate == null) {
+        return ResponseEntity.badRequest().build();
+    }
+    
+    Actor updatedActor = actorService.update(
+        id,
+        name != null ? name : existingActor.getName(),
+        birthDate != null ? birthDate : existingActor.getBirthDate()
     );
+    
+    return ResponseEntity.ok(updatedActor);
   }
 
   @DeleteMapping("/{id}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void delete(
+  public ResponseEntity<Void> delete(
       @PathVariable Long id,
       @RequestParam(defaultValue = "false") boolean force
   ) {
+    actorService.getById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Actor not found with id " + id));
     actorService.delete(id, force);
+    return ResponseEntity.noContent().build();
   }
 
   /**

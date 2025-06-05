@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.movies.API.exception.ResourceNotFoundException;
+import org.springframework.data.web.PageableDefault;
 
 
 @Controller
@@ -74,7 +75,8 @@ public class GenreViewController {
     @GetMapping("/genres/{id}")
     public String showGenreDetails(@PathVariable Long id, Model model) {
         // 1) Load the Genre or throw 404
-        Genre genre = genreService.getById(id);
+        Genre genre = genreService.getById(id)
+            .orElseThrow(() -> new RuntimeException("Genre not found with id " + id));
 
         // 2) Get all movies in that genre
         Set<Movie> movies = genre.getMovies();

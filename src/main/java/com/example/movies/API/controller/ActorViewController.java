@@ -20,6 +20,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.annotation.PathVariable;
 import com.example.movies.API.exception.ResourceNotFoundException;
+import org.springframework.data.web.PageableDefault;
 import java.util.Set;
 import java.util.stream.Collectors;
 

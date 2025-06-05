@@ -66,7 +66,6 @@
                   th:classappend="${#fields.hasErrors('duration')}? ' is-invalid' : ''"
                   id="duration"
                   placeholder="Duration (min)"
-                  th:value="*{duration} != null ? *{duration} : 0"
                 />
                 <label for="duration">Duration (min)</label>
                 <div class="invalid-feedback" th:errors="*{duration}"></div>

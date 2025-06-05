@@ -8,6 +8,9 @@ import com.example.movies.API.entity.Movie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import com.example.movies.API.exception.ResourceNotFoundException;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.web.PageableDefault;
 
 import java.util.List;
 import java.util.Set;
@@ -27,18 +30,24 @@ public class GenreController {
   }
 
   @GetMapping
-  public List<Genre> all() {
-    return genreService.getAll();
+  public Page<Genre> all(Pageable pageable) {
+    return genreService.getAll(pageable);
   }
 
   @GetMapping("/{id}")
-  public Genre one(@PathVariable Long id) {
-    return genreService.getById(id);
-  }
+  public ResponseEntity<?> one(@PathVariable Long id) {
+    return genreService.getById(id)
+        .<ResponseEntity<?>>map(ResponseEntity::ok)
+        .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body("Genre with ID " + id + " not found."));
+}
 
   @GetMapping("/{id}/movies")
-  public Set<Movie> movies(@PathVariable Long id) {
-    return genreService.getMoviesByGenre(id);
+  public ResponseEntity<?> movies(@PathVariable Long id) {
+    return genreService.getMoviesByGenre(id)
+        .<ResponseEntity<?>>map(ResponseEntity::ok)
+        .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body("Genre with ID " + id + " not found."));
   }
 
   @PatchMapping("/{id}")
@@ -54,13 +63,7 @@ public ResponseEntity<?> delete(
 ) {
     try {
         genreService.delete(id, force);
-        return ResponseEntity.ok().body(
-            Map.of(
-                "status", "success",
-                "message", "Genre with ID " + id + " was successfully deleted",
-                "deletedId", id
-            )
-        );
+        return ResponseEntity.noContent().build(); // ✅ 204 No Content
     } catch (ResourceNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
             Map.of(

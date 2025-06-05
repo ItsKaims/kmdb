@@ -77,4 +77,10 @@ public class GlobalValidationHandler {
     body.put("error", ex.getMessage());
     return body;
   }
+
+  @ExceptionHandler(IllegalStateException.class)
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public Map<String, String> handleIllegalState(IllegalStateException ex) {
+    return Map.of("error", ex.getMessage());
+}
 }

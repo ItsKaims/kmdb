@@ -18,6 +18,10 @@ import org.springframework.validation.BindingResult;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.PageRequest;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,8 +45,8 @@ public class MovieViewController {
     @GetMapping("/addmovie")
     public String addMovie(Model model) {
         model.addAttribute("pageTitle", "Add Movie");
-        model.addAttribute("actors", actorService.getAll());
-        model.addAttribute("genres", genreService.getAll());
+        model.addAttribute("actors", actorService.getAll(PageRequest.of(0, 50)));
+        model.addAttribute("genres", genreService.getAll(PageRequest.of(0, 50)));
         model.addAttribute("movie", new MovieDTO());
 
         return "addmovie";  
@@ -80,14 +84,15 @@ public class MovieViewController {
     }
 
     private void populateFormLists(Model model) {
-        model.addAttribute("genres", genreService.getAll());
-        model.addAttribute("actors", actorService.getAll());
+        model.addAttribute("genres", genreService.getAll(PageRequest.of(0, 50)));
+        model.addAttribute("actors", actorService.getAll(PageRequest.of(0, 50)));
     }
 
     @GetMapping("/movies/{id}")
     public String showMovieDetails(@PathVariable Long id, Model model) {
         // 1) Load the Movie or throw 404
-        Movie movie = movieService.getById(id);
+        Movie movie = movieService.getById(id)
+            .orElseThrow(() -> new RuntimeException("Movie not found with id " + id));
 
         // 2) Get all movies in that genre
         Set<Genre> genres = movie.getGenres();
